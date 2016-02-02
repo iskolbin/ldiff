@@ -1,4 +1,4 @@
-local EvalOp, EvalFun, DiffOp, DiffFun
+local EvalOp, DiffOp, DiffFun
 
 local function diff( var, expr )
 	if type( expr ) == 'table' then
@@ -131,20 +131,6 @@ DiffFun = {
 	ln = function( x ) return {'/', 1, x } end,
 }
 
-local tan, atan = math.tan, math.atan
-
-EvalFun = {
-	sin = math.sin,
-	cos = math.cos,
-	tan = math.tan,
-	cot = function( x ) return 1 / tan( x ) end,
-	arcsin = math.asin,
-	arccos = math.acos,
-	arctan = math.atan,
-	arccot = function( x ) return atan( 1 / x ) end,
-	ln = math.log,
-}
-
 EvalOp = {
 	['+'] = function( u, v ) return u + v end,
 	['-'] = function( u, v ) return u - v end,
@@ -167,7 +153,7 @@ DiffOp = {
 	end,
 
 	['/'] = function( var, u, v )
-		return {'/', {'-',{'*', diff( var, u ), b}, {'*', u, diff( var, v )}}, {'*', v, v}}
+		return {'/', {'-',{'*', diff( var, u ), v}, {'*', u, diff( var, v )}}, {'*', v, v}}
 	end,
 
 	['^'] = function( var, u, v )
